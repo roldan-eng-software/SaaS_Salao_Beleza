@@ -62,6 +62,7 @@ def admin_dashboard(request):
         'saldo_class': saldo_class,
         'materiais_baixo': materiais_baixo,
         'proximos_agendamentos': proximos_agendamentos,
+        'today': hoje,
     }
     return render(request, 'gestao/admin_dashboard.html', context)
 

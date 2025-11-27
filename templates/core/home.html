@@ -1,151 +1,331 @@
-{% extends 'base.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html class="light" lang="pt-br">
 
-{% block title %}AppSalão - Sistema de Gestão para Salões de Beleza{% endblock %}
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Landing Page de Cadastro de Clientes</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19e6a2",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#11211c",
+                        "text-light": "#0e1b17",
+                        "text-dark": "#e8f3ef",
+                        "subtle-light": "#4e977f",
+                        "subtle-dark": "#a1c7b9",
+                        "border-light": "#d0e7df",
+                        "border-dark": "#2a3c36",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
 
-{% block main_class %}{% endblock %}
-
-{% block content %}
-<!-- Hero Section -->
-<section class="hero-section text-center">
-    <div class="container">
-        <h1 class="display-3 fw-bold mb-4">
-            <i class="bi bi-scissors"></i> AppSalão
-        </h1>
-        <p class="lead fs-4 mb-5">
-            Sistema Completo de Gestão para Salões de Beleza
-        </p>
-        <div class="d-flex gap-3 justify-content-center">
-            <a href="{% url 'cadastro' %}" class="btn btn-light btn-lg px-5">
-                <i class="bi bi-person-plus"></i> Cadastre-se Grátis
-            </a>
-            <a href="{% url 'servicos_lista' %}" class="btn btn-outline-light btn-lg px-5">
-                <i class="bi bi-calendar-check"></i> Ver Serviços
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-5">
-    <div class="container">
-        <h2 class="text-center mb-5">Funcionalidades Principais</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-calendar-event feature-icon mb-3"></i>
-                        <h4>Agendamento Online</h4>
-                        <p class="text-muted">
-                            Agende seus serviços de forma rápida e prática, escolhendo profissional, data e horário.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-people feature-icon mb-3"></i>
-                        <h4>Gestão de Profissionais</h4>
-                        <p class="text-muted">
-                            Controle completo de profissionais, especialidades e disponibilidade de horários.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-cash-coin feature-icon mb-3"></i>
-                        <h4>Controle Financeiro</h4>
-                        <p class="text-muted">
-                            Gerencie receitas, despesas e tenha relatórios financeiros completos.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-box-seam feature-icon mb-3"></i>
-                        <h4>Controle de Estoque</h4>
-                        <p class="text-muted">
-                            Gerencie materiais e produtos com alertas de estoque baixo.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-puzzle feature-icon mb-3"></i>
-                        <h4>Sistema Modular</h4>
-                        <p class="text-muted">
-                            Ative apenas os módulos que seu salão utiliza: Cabelo, Pele ou Unhas.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card h-100 text-center p-4">
-                    <div class="card-body">
-                        <i class="bi bi-shield-check feature-icon mb-3"></i>
-                        <h4>Seguro e Confiável</h4>
-                        <p class="text-muted">
-                            Seus dados protegidos com as melhores práticas de segurança.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Services Preview -->
-{% if servicos %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Nossos Serviços</h2>
-        <div class="row g-4">
-            {% for servico in servicos %}
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ servico.nome }}</h5>
-                        <p class="text-muted">
-                            <i class="bi bi-tag"></i> {{ servico.modulo }}
-                        </p>
-                        <p class="card-text">{{ servico.descricao|truncatewords:15 }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-primary fw-bold fs-5">R$ {{ servico.preco }}</span>
-                            <span class="text-muted small">
-                                <i class="bi bi-clock"></i> {{ servico.duracao_minutos }} min
-                            </span>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark">
+    <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <div class="flex flex-1 justify-center">
+                <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                    <!-- TopNavBar -->
+                    <header
+                        class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm px-10 py-3">
+                        <div class="flex items-center gap-4">
+                            <div class="size-4 text-text-light dark:text-text-dark">
+                                <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_6_535)">
+                                        <path clip-rule="evenodd"
+                                            d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z"
+                                            fill="currentColor" fill-rule="evenodd"></path>
+                                    </g>
+                                    <defs>
+                                        <clippath id="clip0_6_535">
+                                            <rect fill="white" height="48" width="48"></rect>
+                                        </clippath>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <h2
+                                class="text-lg font-bold leading-tight tracking-[-0.015em] text-text-light dark:text-text-dark">
+                                Salão Chic</h2>
                         </div>
-                    </div>
+                        <div class="flex flex-1 justify-end gap-8">
+                            <nav class="hidden md:flex items-center gap-9">
+                                <a class="text-sm font-medium leading-normal text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary"
+                                    href="#beneficios">Benefícios</a>
+                                <a class="text-sm font-medium leading-normal text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary"
+                                    href="#servicos">Serviços</a>
+                                <a class="text-sm font-medium leading-normal text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary"
+                                    href="#contato">Contato</a>
+                            </nav>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'dashboard' %}"
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-[#0e1b17] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+                                <span class="truncate">Dashboard</span>
+                            </a>
+                            {% else %}
+                            <a href="{% url 'login' %}"
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary text-[#0e1b17] text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+                                <span class="truncate">Login de Cliente</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </header>
+                    <main class="flex flex-col flex-1">
+                        <!-- HeroSection -->
+                        <section class="@container">
+                            <div class="@[480px]:p-4">
+                                <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-start justify-end px-4 pb-10 @[480px]:px-10"
+                                    data-alt="Close-up of a stylish woman with a modern haircut in a bright, airy salon."
+                                    style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAcpNPO2T6ZyHH9k_leLMdhSy-CiqJWyUEjSjuwd01UlLBFFwfFMSo8mdJI8_mdl8BiGO5Zc0cDcWDiZ4yj7CpeHh9dpXeE4ghUrwpR_2z_Ggt_SukqONHdLW30AaG1ItFyi3K_EGQ6QgbFgUFiMfLNiX6Im3qDxgmcyzo22bPk5Yt4uBXVYev1ulv-9sYb4C_3c1tZni4HKx8BDn0nd9LnTkR2EJ8tgJJYKHbjx0AHkWdaaB-_YTU19VqXbaiOwRsT92ZAmk8R7vpV");'>
+                                    <div class="flex flex-col gap-2 text-left max-w-xl">
+                                        <h1
+                                            class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
+                                            Sua beleza, no seu tempo. Agende online com facilidade.
+                                        </h1>
+                                        <h2
+                                            class="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
+                                            Pule a espera. Marque seu horário em nosso salão com apenas alguns cliques.
+                                        </h2>
+                                    </div>
+                                    <a href="{% url 'servicos_lista' %}"
+                                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-primary text-[#0e1b17] text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] hover:opacity-90 transition-opacity">
+                                        <span class="truncate">Agende Agora</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- FeatureSection -->
+                        <section class="flex flex-col gap-10 px-4 py-10 @container sm:py-16" id="beneficios">
+                            <div class="flex flex-col gap-4">
+                                <h1
+                                    class="text-text-light dark:text-text-dark tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">
+                                    Por que agendar online?
+                                </h1>
+                                <p
+                                    class="text-text-light dark:text-text-dark text-base font-normal leading-normal max-w-[720px]">
+                                    Descubra as vantagens de ter o controle dos seus agendamentos na palma da sua mão.
+                                </p>
+                            </div>
+                            <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 p-0">
+                                <div
+                                    class="flex flex-1 gap-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark p-4 flex-col">
+                                    <span class="material-symbols-outlined text-text-light dark:text-text-dark"
+                                        style="font-size: 24px;">schedule</span>
+                                    <div class="flex flex-col gap-1">
+                                        <h2
+                                            class="text-text-light dark:text-text-dark text-base font-bold leading-tight">
+                                            Agenda 24/7</h2>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Agende a qualquer hora e de qualquer lugar, sem precisar ligar.</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex flex-1 gap-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark p-4 flex-col">
+                                    <span class="material-symbols-outlined text-text-light dark:text-text-dark"
+                                        style="font-size: 24px;">notifications_active</span>
+                                    <div class="flex flex-col gap-1">
+                                        <h2
+                                            class="text-text-light dark:text-text-dark text-base font-bold leading-tight">
+                                            Lembretes Automáticos</h2>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Receba notificações por WhatsApp para não esquecer seu horário.</p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex flex-1 gap-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark p-4 flex-col">
+                                    <span class="material-symbols-outlined text-text-light dark:text-text-dark"
+                                        style="font-size: 24px;">group</span>
+                                    <div class="flex flex-col gap-1">
+                                        <h2
+                                            class="text-text-light dark:text-text-dark text-base font-bold leading-tight">
+                                            Escolha seu Profissional</h2>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Veja a disponibilidade e escolha seu profissional favorito.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Services Showcase Section -->
+                        <section id="servicos">
+                            <h2
+                                class="text-text-light dark:text-text-dark text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+                                Nossos Principais Serviços</h2>
+                            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+                                <div class="flex flex-col gap-3 pb-3">
+                                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+                                        data-alt="Woman getting a stylish haircut in a modern salon."
+                                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCc4sAjm6WPyxuTx_zbqYNSV-XRECm1jpzkgZLRLaGLnc8vJcq9ASpqP7QBwpIeyQYypZtQvJ5_C0o_vEVCPa5QNf0k5lqhDZ7oDz947bMKfejv5vBTg9AM1_2MjNVAyCbR42cCSeUTJykLDPsfUFPZp3L5oU9h3gUdHC5K-SIDTndNJqWV5eXZ3SNtCcQf8Bsqyf5bNtfxnhgOWWxB-Ghtd97BuGNoNYkaJVLsOqmnyPYX1h8rrujmrpzIcDWJYNVeXxMDvcB8vLfM");'>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-text-light dark:text-text-dark text-base font-medium leading-normal">
+                                            Cabelo</p>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Cortes, coloração e tratamentos.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 pb-3">
+                                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+                                        data-alt="Close-up of a perfect manicure with a pastel color."
+                                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDi8Ncc3meO53pBuPFjqFOThvH3HbiDQRKwwnuOd3aq2wlSltMqmR1yoXjqg9d8fCnsh9U9f028ajXw_BPQkKwKNUPZrMtWKEb4l-7pmFVUDmJJjCQN_3UR9mL4mKCyfRGe7qm2MfufRhSa4Y-sU0_095uf1YIG4EnjpNh1FK6URxB7Bw2Sqh_bbttZ4mhl2BCRsoAebRiutEoRkIPtveu0FWyZ-NZ_RkRhhtJW5Ap2weE2d1HR-YY2ZW0NfnDleYbqCSRj3Alivskv");'>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-text-light dark:text-text-dark text-base font-medium leading-normal">
+                                            Unhas</p>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Manicure e pedicure completas.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 pb-3">
+                                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+                                        data-alt="Woman relaxing while receiving a facial treatment."
+                                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDw8BcpZWTaop0ekLD8bJcF-RsQtS1yTSSmaLFokNIN6VJIdofzlwmBiMNCW5CidwbOKk8ky_Akq5r9MDKO2I9YyTuhhERk4XenDD_V5hwuUmMcGMdqUasF3bqqiIDNqkytbuJYZhCsz6Z_SP3Ox3PPLCcH_MDCAG2TCTIjdY4eVDP5rguTTmRkcyHwr_2kUO8ELuDrI84aeAPATaQFIAdodQIiotVNPdwHljzBCrblqlsKYby3WUQyk942zfSVoOkZ8iAK3d0qe34U");'>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-text-light dark:text-text-dark text-base font-medium leading-normal">
+                                            Estética</p>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Limpeza de pele e tratamentos faciais.</p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-3 pb-3">
+                                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+                                        data-alt="Person enjoying a relaxing back massage."
+                                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuASwcB8r-ORRSAtzmEy5QDc1acvEM54R0fg0j3eqCA-mcVmLq7zk2tzg0Fh6u7cS0IEZa-0aPSaeN6a6QbeqknJzCGMZ2cJRM6D6NIdW3BcoQwE4GI1mhDH1USZe1Xx9dhrJy-1DFKNR_Kn6NFT22BAeqo5_4dSB0rz-uF2k7P6pCUlfTSNI2dNjom9TYDjvuCynR_44MPySLyS_IlmiJCoqtfrlHKVTScSpzY3IdzRVzje04kFaqb4mPUDKG7U0aL2Qrikk2Lml3dE");'>
+                                    </div>
+                                    <div>
+                                        <p
+                                            class="text-text-light dark:text-text-dark text-base font-medium leading-normal">
+                                            Massagem</p>
+                                        <p
+                                            class="text-subtle-light dark:text-subtle-dark text-sm font-normal leading-normal">
+                                            Massagens relaxantes e terapêuticas.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- CTA Section / Registration Form -->
+                        <section
+                            class="bg-primary/20 dark:bg-primary/10 rounded-xl my-10 mx-4 p-8 sm:p-12 text-center flex flex-col items-center gap-6">
+                            <h2 class="text-3xl font-bold tracking-tight text-text-light dark:text-text-dark max-w-lg">
+                                Pronta para brilhar? Crie sua conta.</h2>
+                            <p class="text-subtle-light dark:text-subtle-dark max-w-md">O cadastro é rápido e te dá
+                                acesso a agendamentos exclusivos, promoções e muito mais.</p>
+                            <a href="{% url 'cadastro' %}"
+                                class="mt-2 flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-primary text-[#0e1b17] text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+                                <span class="truncate">Crie sua Conta e Agende</span>
+                            </a>
+                        </section>
+                        <!-- Contact & Location Section -->
+                        <section class="p-4 py-10 sm:py-16" id="contato">
+                            <div class="flex flex-col items-center text-center gap-3 mb-8">
+                                <h2
+                                    class="text-text-light dark:text-text-dark text-3xl font-bold leading-tight tracking-[-0.015em]">
+                                    Visite-nos</h2>
+                                <p
+                                    class="text-subtle-light dark:text-subtle-dark text-base font-normal leading-normal max-w-lg">
+                                    Estamos ansiosos para recebê-la em nosso espaço. Encontre-nos no endereço abaixo ou
+                                    entre em contato.</p>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                <div class="w-full aspect-video md:aspect-square bg-center bg-no-repeat bg-cover rounded-xl"
+                                    data-location="São Paulo, Brazil"
+                                    style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDcHfUCrVGdqydr_cGgJ71wrMtHwwYI5yTz_zfXRdlxenH8_c_d9JVdD5Zqx3vHU17Rbktez9sfJKShI3FirYQ1T-mHXZISL7ILOlGPkkTe7f7HZeFlInyPxo-2yPsFHrzGxQ9JU7Gr9VIZP0FdezwBnFJFB8C5vNJFfhfz-wo38M-SkqZbcwzBPiktnXGDsv9RNst_8-WbsmPcgPVyy4P9Aeryytbx_5UxdgQ_A0BEgBtwnmEE4HqEMRwIJqcLjai2-7i2WPC5x5Ka');">
+                                </div>
+                                <div class="flex flex-col gap-6 text-center md:text-left">
+                                    <div class="flex flex-col gap-2">
+                                        <h3 class="text-lg font-bold text-text-light dark:text-text-dark">Endereço</h3>
+                                        <p class="text-subtle-light dark:text-subtle-dark">Rua da Beleza,
+                                            123<br />Jardim Glamour, São Paulo - SP</p>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <h3 class="text-lg font-bold text-text-light dark:text-text-dark">Contato</h3>
+                                        <p class="text-subtle-light dark:text-subtle-dark">
+                                            <a class="hover:text-primary" href="tel:+5511912345678">(11)
+                                                91234-5678</a><br />
+                                            <a class="hover:text-primary"
+                                                href="mailto:contato@salaochic.com">contato@salaochic.com</a>
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <h3 class="text-lg font-bold text-text-light dark:text-text-dark">Horário</h3>
+                                        <p class="text-subtle-light dark:text-subtle-dark">Terça a Sábado<br />Das 9h às
+                                            19h</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                    <!-- Footer -->
+                    <footer class="border-t border-border-light dark:border-border-dark mt-10">
+                        <div class="px-10 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="size-4 text-text-light dark:text-text-dark">
+                                    <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_footer_535)">
+                                            <path clip-rule="evenodd"
+                                                d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z"
+                                                fill="currentColor" fill-rule="evenodd"></path>
+                                        </g>
+                                        <defs>
+                                            <clippath id="clip0_footer_535">
+                                                <rect fill="white" height="48" width="48"></rect>
+                                            </clippath>
+                                        </defs>
+                                    </svg>
+                                </div>
+                                <h2
+                                    class="text-lg font-bold leading-tight tracking-[-0.015em] text-text-light dark:text-text-dark">
+                                    Salão Chic</h2>
+                            </div>
+                            <p class="text-sm text-subtle-light dark:text-subtle-dark">© 2024 Salão Chic. Todos os
+                                direitos reservados.</p>
+                            <nav class="flex items-center gap-4">
+                                <a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary"
+                                    href="{% url 'home' %}">Início</a>
+                                <a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary"
+                                    href="#servicos">Serviços</a>
+                                <a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary"
+                                    href="#contato">Contato</a>
+                            </nav>
+                        </div>
+                    </footer>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'servicos_lista' %}" class="btn btn-primary btn-lg">
-                Ver Todos os Serviços
-            </a>
         </div>
     </div>
-</section>
-{% endif %}
+</body>
 
-<!-- CTA Section -->
-<section class="bg-primary text-white py-5">
-    <div class="container text-center">
-        <h2 class="mb-4">Pronto para Transformar a Gestão do Seu Salão?</h2>
-        <p class="lead mb-4">
-            Cadastre-se agora e comece a gerenciar seu salão de forma profissional!
-        </p>
-        <a href="{% url 'cadastro' %}" class="btn btn-light btn-lg px-5">
-            <i class="bi bi-rocket"></i> Começar Agora
-        </a>
-    </div>
-</section>
-{% endblock %}
+</html>

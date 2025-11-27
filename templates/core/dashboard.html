@@ -1,92 +1,370 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="pt-br">
 
-{% block title %}Dashboard - AppSalão{% endblock %}
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Agenda - Beauty SaaS</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#D9AAB7",
+            "background-light": "#F8F9FA",
+            "background-dark": "#1C1C1E",
+            "text-light": "#343A40",
+            "text-dark": "#EAEAEB",
+            "text-secondary-light": "#6C757D",
+            "text-secondary-dark": "#A0A0A5",
+            "border-light": "#DEE2E6",
+            "border-dark": "#38383A",
+            "card-light": "#FFFFFF",
+            "card-dark": "#2C2C2E",
+            "status-confirmed": "#28A745",
+            "status-pending": "#FFC107",
+            "status-canceled": "#DC3545",
+          },
+          fontFamily: {
+            "display": ["Manrope", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+</head>
 
-{% block content %}
-<div class="container">
-    <h2 class="mb-4">
-        <i class="bi bi-speedometer2"></i> Meu Dashboard
-    </h2>
-
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <h5 class="card-title text-muted">Total de Agendamentos</h5>
-                    <h2 class="text-primary">{{ agendamentos.count }}</h2>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+  <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+      <div class="flex flex-1 justify-center">
+        <div class="layout-content-container flex flex-col w-full">
+          <!-- Navigation Bar -->
+          <nav
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-6 py-3 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10">
+            <div class="flex items-center gap-6">
+              <a href="{% url 'home' %}" class="flex items-center gap-2">
+                <div class="size-6 text-primary">
+                  <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_6_330)">
+                      <path clip-rule="evenodd"
+                        d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                        fill="currentColor" fill-rule="evenodd"></path>
+                    </g>
+                    <defs>
+                      <clippath id="clip0_6_330">
+                        <rect fill="white" height="48" width="48"></rect>
+                      </clippath>
+                    </defs>
+                  </svg>
                 </div>
+                <h2 class="text-text-light dark:text-text-dark text-lg font-bold tracking-[-0.015em]">Beauty SaaS</h2>
+              </a>
+              <a href="{% url 'dashboard' %}"
+                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                <span class="material-symbols-outlined text-lg">home</span>
+                <span class="text-sm font-medium">Dashboard</span>
+              </a>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card stats-card">
-                <div class="card-body">
-                    <h5 class="card-title text-muted">Agendamentos Pendentes</h5>
-                    <h2 class="text-warning">{{ agendamentos_pendentes }}</h2>
+            <div class="flex items-center gap-4">
+              {% if user.tipo == 'admin' or user.is_staff %}
+              <!-- Admin Dropdown -->
+              <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open"
+                  class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                  <span class="material-symbols-outlined text-lg">settings</span>
+                  <span class="text-sm font-medium">Admin</span>
+                  <span class="material-symbols-outlined text-base transition-transform"
+                    :class="open ? 'rotate-180' : ''">expand_more</span>
+                </button>
+                <div x-show="open" @click.away="open = false" x-transition
+                  class="absolute right-0 mt-2 w-56 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg py-2 z-50">
+                  <a href="{% url 'admin_dashboard' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Dashboard Admin</a>
+                  <a href="{% url 'admin:index' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Django Admin</a>
+                  <div class="border-t border-border-light dark:border-border-dark my-2"></div>
+                  <a href="{% url 'gestao_profissionais' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Profissionais</a>
+                  <a href="{% url 'gestao_servicos' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Serviços</a>
+                  <a href="{% url 'gestao_estoque' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Estoque</a>
+                  <a href="{% url 'gestao_financeiro' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Financeiro</a>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <a href="{% url 'servicos_lista' %}" class="btn btn-primary btn-lg">
-                        <i class="bi bi-plus-circle"></i> Novo Agendamento
-                    </a>
+              </div>
+              {% endif %}
+              <!-- User Dropdown -->
+              <div x-data="{ open: false }" class="relative">
+                <button @click="open = !open"
+                  class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                  {% if user.foto %}
+                  <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8"
+                    style="background-image: url('{{ user.foto.url }}');"></div>
+                  {% else %}
+                  <div
+                    class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 bg-primary flex items-center justify-center text-white text-xs font-bold">
+                    {{ user.first_name.0|default:user.username.0|upper }}
+                  </div>
+                  {% endif %}
+                  <span class="text-sm font-medium">{{ user.get_full_name|default:user.username }}</span>
+                  <span class="material-symbols-outlined text-base transition-transform"
+                    :class="open ? 'rotate-180' : ''">expand_more</span>
+                </button>
+                <div x-show="open" @click.away="open = false" x-transition
+                  class="absolute right-0 mt-2 w-56 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg py-2 z-50">
+                  <a href="{% url 'perfil' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Meu Perfil</a>
+                  <a href="{% url 'meus_agendamentos' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Meus Agendamentos</a>
+                  <div class="border-t border-border-light dark:border-border-dark my-2"></div>
+                  <a href="{% url 'logout' %}"
+                    class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Sair</a>
                 </div>
+              </div>
             </div>
+          </nav>
+          <main class="flex flex-1 p-6 gap-6">
+            <aside class="w-80 hidden lg:block">
+              <div
+                class="bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg p-4">
+                <div class="flex flex-col gap-0.5">
+                  <div class="flex items-center p-1 justify-between">
+                    <button
+                      class="flex size-8 items-center justify-center rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                      <span class="material-symbols-outlined text-base">chevron_left</span>
+                    </button>
+                    <p class="text-base font-bold">Setembro 2024</p>
+                    <button
+                      class="flex size-8 items-center justify-center rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700">
+                      <span class="material-symbols-outlined text-base">chevron_right</span>
+                    </button>
+                  </div>
+                  <div class="grid grid-cols-7 text-center">
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      D</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      S</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      T</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      Q</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      Q</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      S</p>
+                    <p
+                      class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-bold h-10 flex items-center justify-center">
+                      S</p>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">1</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">2</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">3</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">4</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">5</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">6</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">7</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">8</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">9</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">10</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">11</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">12</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">13</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">14</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">15</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">16</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">17</div>
+                    </button>
+                    <button class="h-10 w-full text-white dark:text-text-light text-sm font-bold">
+                      <div class="flex size-full items-center justify-center rounded-full bg-primary">18</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">19</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">20</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">21</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">22</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">23</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">24</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">25</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">26</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">27</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">28</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">29</div>
+                    </button>
+                    <button class="h-10 w-full text-text-light dark:text-text-dark text-sm">
+                      <div class="flex size-full items-center justify-center rounded-full">30</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+            <div class="flex-1 flex flex-col gap-4">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <p class="text-3xl font-bold tracking-tight">Visão Geral dos Agendamentos</p>
+                <div class="flex gap-3 overflow-x-auto">
+                  <button
+                    class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark pl-3 pr-2 hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                    <p class="text-sm font-medium">Segmento: Todos</p>
+                    <span
+                      class="material-symbols-outlined text-base text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+                  </button>
+                  <button
+                    class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark pl-3 pr-2 hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                    <p class="text-sm font-medium">Status: Todos</p>
+                    <span
+                      class="material-symbols-outlined text-base text-text-secondary-light dark:text-text-secondary-dark">expand_more</span>
+                  </button>
+                </div>
+              </div>
+              <div class="flex flex-col gap-4">
+                <h3 class="text-xl font-semibold">Hoje, {{ today|date:"d \d\e F" }}</h3>
+                <div class="flex flex-col gap-3">
+                  {% if agendamentos %}
+                  {% for agendamento in agendamentos %}
+                  <div
+                    class="flex items-start gap-4 p-4 rounded-lg bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow {% if agendamento.status == 'cancelado' %}opacity-60{% endif %}">
+                    <div class="w-20 text-center">
+                      <p class="font-bold text-lg">{{ agendamento.hora|date:"H:i" }}</p>
+                      <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">{{
+                        agendamento.servico.duracao_minutos }} min</p>
+                    </div>
+                    {% if agendamento.status == 'confirmado' %}
+                    <div class="w-1.5 h-16 bg-status-confirmed rounded-full mt-1"></div>
+                    {% elif agendamento.status == 'pendente' %}
+                    <div class="w-1.5 h-16 bg-status-pending rounded-full mt-1"></div>
+                    {% elif agendamento.status == 'cancelado' %}
+                    <div class="w-1.5 h-16 bg-status-canceled rounded-full mt-1"></div>
+                    {% else %}
+                    <div class="w-1.5 h-16 bg-zinc-400 rounded-full mt-1"></div>
+                    {% endif %}
+                    <div class="flex-1">
+                      <p
+                        class="font-semibold text-text-light dark:text-text-dark {% if agendamento.status == 'cancelado' %}line-through{% endif %}">
+                        {{ agendamento.servico.nome }} - {{
+                        agendamento.cliente.get_full_name|default:agendamento.cliente.username }}</p>
+                      <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Profissional: {{
+                        agendamento.profissional }}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      {% if agendamento.status == 'pendente' %}
+                      <button
+                        class="flex items-center justify-center rounded-lg h-9 w-9 border border-border-light dark:border-border-dark hover:bg-zinc-100 dark:hover:bg-zinc-700"><span
+                          class="material-symbols-outlined text-lg">check</span></button>
+                      {% endif %}
+                      {% if agendamento.status != 'cancelado' %}
+                      <button
+                        class="flex items-center justify-center rounded-lg h-9 w-9 border border-border-light dark:border-border-dark hover:bg-zinc-100 dark:hover:bg-zinc-700"><span
+                          class="material-symbols-outlined text-lg">edit_calendar</span></button>
+                      <button
+                        class="flex items-center justify-center rounded-lg h-9 w-9 border border-border-light dark:border-border-dark hover:bg-zinc-100 dark:hover:bg-zinc-700"><span
+                          class="material-symbols-outlined text-lg">close</span></button>
+                      {% else %}
+                      <button
+                        class="flex items-center justify-center rounded-lg h-9 w-9 border border-border-light dark:border-border-dark hover:bg-zinc-100 dark:hover:bg-zinc-700"><span
+                          class="material-symbols-outlined text-lg">history</span></button>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endfor %}
+                  {% else %}
+                  <div
+                    class="flex items-center justify-center p-12 rounded-lg bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+                    <div class="text-center">
+                      <span
+                        class="material-symbols-outlined text-6xl text-text-secondary-light dark:text-text-secondary-dark">event_busy</span>
+                      <p class="mt-4 text-lg text-text-secondary-light dark:text-text-secondary-dark">Nenhum agendamento
+                        para hoje</p>
+                      <a href="{% url 'servicos_lista' %}"
+                        class="mt-4 inline-block px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                        Fazer Agendamento
+                      </a>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
+      </div>
     </div>
+    <a href="{% url 'servicos_lista' %}"
+      class="fixed bottom-8 right-8 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white dark:text-text-light shadow-lg hover:bg-primary/90 transition-colors">
+      <span class="material-symbols-outlined text-3xl">add</span>
+    </a>
+  </div>
+</body>
 
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                <i class="bi bi-calendar-check"></i> Meus Próximos Agendamentos
-            </h5>
-        </div>
-        <div class="card-body">
-            {% if agendamentos %}
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Hora</th>
-                            <th>Serviço</th>
-                            <th>Profissional</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for agendamento in agendamentos %}
-                        <tr>
-                            <td>{{ agendamento.data|date:"d/m/Y" }}</td>
-                            <td>{{ agendamento.hora }}</td>
-                            <td>{{ agendamento.servico.nome }}</td>
-                            <td>{{ agendamento.profissional }}</td>
-                            <td>
-                                <span class="badge badge-status-{{ agendamento.status }}">
-                                    {{ agendamento.get_status_display }}
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="text-center mt-3">
-                <a href="{% url 'meus_agendamentos' %}" class="btn btn-outline-primary">
-                    Ver Todos os Agendamentos
-                </a>
-            </div>
-            {% else %}
-            <div class="text-center py-5 text-muted">
-                <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
-                <p class="mt-3">Você ainda não possui agendamentos.</p>
-                <a href="{% url 'servicos_lista' %}" class="btn btn-primary">
-                    Fazer Primeiro Agendamento
-                </a>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
-{% endblock %}
+</html>

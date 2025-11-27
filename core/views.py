@@ -99,9 +99,11 @@ def dashboard(request):
     # Contagem de agendamentos pendentes
     agendamentos_pendentes = Agendamento.objects.filter(cliente=user, status='pendente').count()
     
+    from datetime import date
     context = {
         'agendamentos': agendamentos,
         'agendamentos_pendentes': agendamentos_pendentes,
+        'today': date.today(),
     }
     return render(request, 'core/dashboard.html', context)
 
