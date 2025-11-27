@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Admin - AppSalão{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-speedometer"></i> Dashboard Administrativo
+    </h2>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card border-primary">
+                <div class="card-body">
+                    <h6 class="text-muted">Agendamentos Hoje</h6>
+                    <h2 class="text-primary">{{ agendamentos_hoje }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card border-info">
+                <div class="card-body">
+                    <h6 class="text-muted">Agendamentos Este Mês</h6>
+                    <h2 class="text-info">{{ total_agendamentos_mes }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card border-success">
+                <div class="card-body">
+                    <h6 class="text-muted">Receitas do Mês</h6>
+                    <h2 class="text-success">R$ {{ receitas_mes }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card border-{{ saldo_class }}">
+                <div class="card-body">
+                    <h6 class="text-muted">Saldo do Mês</h6>
+                    <h2 class="text-{{ saldo_class }}">R$ {{ saldo_mes }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    {% if materiais_baixo > 0 %}
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle"></i>
+        <strong>Atenção!</strong> Existem {{ materiais_baixo }} materiais com estoque baixo.
+        <a href="{% url 'gestao_estoque' %}" class="alert-link">Verificar estoque</a>
+    </div>
+    {% endif %}
+
+    <!-- Próximos Agendamentos -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-calendar-week"></i> Próximos Agendamentos
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if proximos_agendamentos %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Data / Hora</th>
+                            <th>Cliente</th>
+                            <th>Serviço</th>
+                            <th>Profissional</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agendamento in proximos_agendamentos %}
+                        <tr>
+                            <td>
+                                <strong>{{ agendamento.data|date:"d/m/Y" }}</strong><br>
+                                <small class="text-muted">{{ agendamento.hora }}</small>
+                            </td>
+                            <td>{{ agendamento.cliente.get_full_name }}</td>
+                            <td>{{ agendamento.servico.nome }}</td>
+                            <td>{{ agendamento.profissional }}</td>
+                            <td>
+                                <span class="badge badge-status-{{ agendamento.status }}">
+                                    {{ agendamento.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-3">Nenhum agendamento próximo.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4 mt-4">
+        <div class="col-md-3">
+            <a href="{% url 'gestao_profissionais' %}" class="btn btn-outline-primary w-100 p-4">
+                <i class="bi bi-people fs-1 d-block mb-2"></i>
+                Profissionais
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'gestao_servicos' %}" class="btn btn-outline-primary w-100 p-4">
+                <i class="bi bi-scissors fs-1 d-block mb-2"></i>
+                Serviços
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'gestao_estoque' %}" class="btn btn-outline-primary w-100 p-4">
+                <i class="bi bi-box-seam fs-1 d-block mb-2"></i>
+                Estoque
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="{% url 'gestao_financeiro' %}" class="btn btn-outline-primary w-100 p-4">
+                <i class="bi bi-cash-coin fs-1 d-block mb-2"></i>
+                Financeiro
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

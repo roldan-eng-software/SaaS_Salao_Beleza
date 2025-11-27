@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Gestão Financeira - AppSalão{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-cash-coin"></i> Gestão Financeira
+    </h2>
+
+    <!-- Financial Summary -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card stats-card border-success">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Receitas</h6>
+                    <h2 class="text-success">R$ {{ total_receitas }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card border-danger">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Despesas</h6>
+                    <h2 class="text-danger">R$ {{ total_despesas }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card border-{{ saldo_class }}">
+                <div class="card-body">
+                    <h6 class="text-muted">Saldo</h6>
+                    <h2 class="text-{{ saldo_class }}">R$ {{ saldo }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Transações Recentes</h5>
+                </div>
+                <div class="card-body">
+                    {% if transacoes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Descrição</th>
+                                    <th>Categoria</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transacao in transacoes %}
+                                <tr>
+                                    <td>{{ transacao.data|date:"d/m/Y" }}</td>
+                                    <td><strong>{{ transacao.descricao }}</strong></td>
+                                    <td><span class="badge bg-secondary">{{ transacao.get_categoria_display }}</span>
+                                    </td>
+                                    <td class="text-{{ transacao.tipo|yesno:'success,danger' }}">
+                                        {{ transacao.tipo|yesno:'+,-' }} R$ {{ transacao.valor }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ transacao.pago|yesno:'success,warning' }}">
+                                            {{ transacao.pago|yesno:'Pago,Pendente' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-4">Nenhuma transação registrada.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Nova Transação</h5>
+                </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Meu Perfil - AppSalão{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-circle"></i> Editar Perfil
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if user.foto %}
+                    <div class="text-center mb-4">
+                        <img src="{{ user.foto.url }}" alt="Foto de Perfil" class="rounded-circle"
+                            style="width: 150px; height: 150px; object-fit: cover;">
+                    </div>
+                    {% endif %}
+
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AppSalão - Sistema de Gestão para Salões de Beleza{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-4">
+            <i class="bi bi-scissors"></i> AppSalão
+        </h1>
+        <p class="lead fs-4 mb-5">
+            Sistema Completo de Gestão para Salões de Beleza
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{% url 'cadastro' %}" class="btn btn-light btn-lg px-5">
+                <i class="bi bi-person-plus"></i> Cadastre-se Grátis
+            </a>
+            <a href="{% url 'servicos_lista' %}" class="btn btn-outline-light btn-lg px-5">
+                <i class="bi bi-calendar-check"></i> Ver Serviços
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Funcionalidades Principais</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-event feature-icon mb-3"></i>
+                        <h4>Agendamento Online</h4>
+                        <p class="text-muted">
+                            Agende seus serviços de forma rápida e prática, escolhendo profissional, data e horário.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-people feature-icon mb-3"></i>
+                        <h4>Gestão de Profissionais</h4>
+                        <p class="text-muted">
+                            Controle completo de profissionais, especialidades e disponibilidade de horários.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-cash-coin feature-icon mb-3"></i>
+                        <h4>Controle Financeiro</h4>
+                        <p class="text-muted">
+                            Gerencie receitas, despesas e tenha relatórios financeiros completos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-box-seam feature-icon mb-3"></i>
+                        <h4>Controle de Estoque</h4>
+                        <p class="text-muted">
+                            Gerencie materiais e produtos com alertas de estoque baixo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-puzzle feature-icon mb-3"></i>
+                        <h4>Sistema Modular</h4>
+                        <p class="text-muted">
+                            Ative apenas os módulos que seu salão utiliza: Cabelo, Pele ou Unhas.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="bi bi-shield-check feature-icon mb-3"></i>
+                        <h4>Seguro e Confiável</h4>
+                        <p class="text-muted">
+                            Seus dados protegidos com as melhores práticas de segurança.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+{% if servicos %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Nossos Serviços</h2>
+        <div class="row g-4">
+            {% for servico in servicos %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ servico.nome }}</h5>
+                        <p class="text-muted">
+                            <i class="bi bi-tag"></i> {{ servico.modulo }}
+                        </p>
+                        <p class="card-text">{{ servico.descricao|truncatewords:15 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-primary fw-bold fs-5">R$ {{ servico.preco }}</span>
+                            <span class="text-muted small">
+                                <i class="bi bi-clock"></i> {{ servico.duracao_minutos }} min
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'servicos_lista' %}" class="btn btn-primary btn-lg">
+                Ver Todos os Serviços
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Pronto para Transformar a Gestão do Seu Salão?</h2>
+        <p class="lead mb-4">
+            Cadastre-se agora e comece a gerenciar seu salão de forma profissional!
+        </p>
+        <a href="{% url 'cadastro' %}" class="btn btn-light btn-lg px-5">
+            <i class="bi bi-rocket"></i> Começar Agora
+        </a>
+    </div>
+</section>
+{% endblock %}

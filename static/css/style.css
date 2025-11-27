@@ -1,0 +1,90 @@
+:root {
+    --primary-color: #6f42c1;
+    --secondary-color: #fd7e14;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #5a32a3;
+    border-color: #5a32a3;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 100px 0;
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+}
+
+.stats-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(111, 66, 193, 0.1);
+}
+
+.badge-status-pendente {
+    background-color: var(--warning-color);
+}
+
+.badge-status-confirmado {
+    background-color: var(--info-color);
+}
+
+.badge-status-concluido {
+    background-color: var(--success-color);
+}
+
+.badge-status-cancelado {
+    background-color: var(--danger-color);
+}
+
+footer {
+    margin-top: auto;
+}

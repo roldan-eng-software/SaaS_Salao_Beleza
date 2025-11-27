@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Gestão de Estoque - AppSalão{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">
+        <i class="bi bi-box-seam"></i> Gestão de Estoque
+    </h2>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Materiais em Estoque</h5>
+                </div>
+                <div class="card-body">
+                    {% if materiais %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Módulo</th>
+                                    <th>Quantidade</th>
+                                    <th>Custo Unit.</th>
+                                    <th>Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for material in materiais %}
+                                <tr class="{% if material.estoque_baixo %}table-warning{% endif %}">
+                                    <td><strong>{{ material.nome }}</strong></td>
+                                    <td><span class="badge bg-secondary">{{ material.get_modulo_display }}</span></td>
+                                    <td>{{ material.quantidade }} {{ material.unidade }}</td>
+                                    <td class="text-muted">R$ {{ material.custo_unitario }}</td>
+                                    <td>
+                                        {% if material.estoque_baixo %}
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Baixo
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> OK
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-4">Nenhum material cadastrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Novo Material</h5>
+                </div>
+                <div class="card-body">
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
