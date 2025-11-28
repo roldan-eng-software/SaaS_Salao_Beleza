@@ -247,12 +247,27 @@
                                         <div class="w-1.5 h-16 bg-zinc-400 rounded-full mt-1"></div>
                                         {% endif %}
                                         <div class="flex-1">
-                                            <p class="font-semibold text-text-light dark:text-text-dark">{{
-                                                agendamento.servico.nome }} - {{
-                                                agendamento.cliente.get_full_name|default:agendamento.cliente.username
-                                                }}</p>
+                                            <p class="font-semibold text-text-light dark:text-text-dark">
+                                                {% if agendamento.servico %}
+                                                    {{ agendamento.servico.nome }}
+                                                {% else %}
+                                                    <span class="text-red-500">(Serviço não definido)</span>
+                                                {% endif %}
+                                                - 
+                                                {% if agendamento.cliente %}
+                                                    {{ agendamento.cliente.get_full_name|default:agendamento.cliente.username }}
+                                                {% else %}
+                                                    <span class="text-red-500">(Cliente não definido)</span>
+                                                {% endif %}
+                                            </p>
                                             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                                                Profissional: {{ agendamento.profissional }}</p>
+                                                Profissional: 
+                                                {% if agendamento.profissional %}
+                                                    {{ agendamento.profissional }}
+                                                {% else %}
+                                                    <span class="text-red-500">(não definido)</span>
+                                                {% endif %}
+                                            </p>
                                             <span class="inline-block mt-1 px-2 py-1 text-xs rounded-full 
                 {% if agendamento.status == 'confirmado' %}bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300
                 {% elif agendamento.status == 'pendente' %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300

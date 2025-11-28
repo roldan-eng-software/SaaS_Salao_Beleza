@@ -5,24 +5,22 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CadastroUsuarioForm, PerfilUsuarioForm
 from servicos.models import Servico, Profissional, Agendamento
-from core.models import ConfiguracaoSalao
+from core.models import Salao
+from django.utils.text import slugify
+
 
 def home(request):
-    """Landing page"""
-    config = ConfiguracaoSalao.get_config()
-    
-    # Serviços em destaque
-    servicos_destaque = Servico.objects.filter(ativo=True)[:6]
-    
+    """
+    Landing page genérica.
+    Em um app multi-tenant, a home page não deve mais mostrar dados
+    de um único salão (config e serviços). Esta view foi simplificada.
+    """
     context = {
-        'config': config,
-        'servicos': servicos_destaque,
+        'config': None,  # O objeto config não existe mais
+        'servicos': [],  # A lista de serviços agora depende do salão
     }
     return render(request, 'core/home.html', context)
 
-
-from core.models import ConfiguracaoSalao, Salao
-from django.utils.text import slugify
 
 def cadastro(request):
     """Cadastro de novo usuário e salão"""

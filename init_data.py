@@ -9,7 +9,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
 
 from servicos.models import Modulo
-from core.models import ConfiguracaoSalao
 
 def criar_modulos():
     """Cria os módulos básicos se não existirem"""
@@ -32,17 +31,12 @@ def criar_modulos():
         else:
             print(f"- Módulo '{modulo}' já existe.")
 
-def criar_configuracao():
-    """Cria configuração padrão do salão"""
-    config = ConfiguracaoSalao.get_config()
-    print(f"✓ Configuração do salão criada: {config.nome_salao}")
-
 if __name__ == '__main__':
     print("Inicializando dados básicos...")
     criar_modulos()
-    criar_configuracao()
-    print("\n✅ Dados iniciais criados com sucesso!")
+    print("\n✅ Dados iniciais (módulos) criados com sucesso!")
     print("\nPróximos passos:")
-    print("1. Crie um superusuário: python manage.py createsuperuser")
-    print("2. Inicie o servidor: python manage.py runserver")
-    print("3. Acesse: http://127.0.0.1:8000")
+    print("1. Inicie o servidor: python manage.py runserver")
+    print("2. Acesse a página de cadastro para criar seu primeiro salão e usuário admin:")
+    print("   http://127.0.0.1:8000/cadastro")
+    print("3. (Opcional) Crie um superusuário global: python manage.py createsuperuser")

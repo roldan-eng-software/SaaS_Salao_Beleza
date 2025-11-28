@@ -51,7 +51,7 @@ def admin_dashboard(request):
     # Próximos agendamentos
     proximos_agendamentos = Agendamento.objects.filter(
         data__gte=hoje
-    ).exclude(status='cancelado').order_by('data', 'hora')[:10]
+    ).exclude(status='cancelado').select_related('servico', 'cliente', 'profissional').order_by('data', 'hora')[:10]
     
     context = {
         'total_agendamentos_mes': total_agendamentos_mes,

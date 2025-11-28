@@ -5,20 +5,22 @@ from django.db.models import Q
 from datetime import datetime, timedelta, time
 from .models import Modulo, Servico, Profissional, Agendamento
 from .forms import AgendamentoForm
-from core.models import ConfiguracaoSalao
 
+
+@login_required
 def servicos_lista(request):
-    """Lista de serviços disponíveis"""
-    config = ConfiguracaoSalao.get_config()
+    """Lista de serviços disponíveis para o salão do usuário"""
+    salao = request.salao
     
-    # Filtra serviços ativos baseado nos módulos ativos
+    # Filtra serviços ativos baseado nos módulos ativos do salão
+    # O TenantManager já filtra os serviços para o salão correto
     servicos = Servico.objects.filter(ativo=True)
     
-    if not config.modulo_cabelo:
+    if not salao.modulo_cabelo:
         servicos = servicos.exclude(modulo__nome='cabelo')
-    if not config.modulo_pele:
+    if not salao.modulo_pele:
         servicos = servicos.exclude(modulo__nome='pele')
-    if not config.modulo_unhas:
+    if not salao.modulo_unhas:
         servicos = servicos.exclude(modulo__nome='unhas')
     
     # Agrupa por módulo
@@ -31,7 +33,7 @@ def servicos_lista(request):
     
     context = {
         'servicos_por_modulo': servicos_por_modulo,
-        'config': config,
+        'salao': salao,
     }
     return render(request, 'servicos/servicos_lista.html', context)
 

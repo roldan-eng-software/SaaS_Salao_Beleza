@@ -13,7 +13,7 @@ class Material(models.Model):
         ('geral', 'Geral'),
     )
     
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='materiais', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='materiais', verbose_name='Salão')
     nome = models.CharField('Nome do Material', max_length=200)
     modulo = models.CharField('Módulo', max_length=20, choices=MODULO_CHOICES)
     descricao = models.TextField('Descrição', blank=True)
@@ -51,7 +51,7 @@ class MovimentacaoEstoque(models.Model):
         ('ajuste', 'Ajuste'),
     )
     
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='movimentacoes', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='movimentacoes', verbose_name='Salão')
     material = models.ForeignKey(Material, on_delete=models.CASCADE, verbose_name='Material', related_name='movimentacoes')
     tipo = models.CharField('Tipo', max_length=20, choices=TIPO_CHOICES)
     quantidade = models.DecimalField('Quantidade', max_digits=10, decimal_places=2)
@@ -93,7 +93,7 @@ class Transacao(models.Model):
         ('outro', 'Outro'),
     )
     
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='transacoes', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='transacoes', verbose_name='Salão')
     tipo = models.CharField('Tipo', max_length=20, choices=TIPO_CHOICES)
     categoria = models.CharField('Categoria', max_length=30, choices=CATEGORIA_CHOICES)
     descricao = models.CharField('Descrição', max_length=500)

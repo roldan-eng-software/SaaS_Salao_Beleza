@@ -28,7 +28,7 @@ class Modulo(models.Model):
 
 class Servico(models.Model):
     """Serviços oferecidos pelo salão"""
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='servicos', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='servicos', verbose_name='Salão')
     nome = models.CharField('Nome do Serviço', max_length=200)
     modulo = models.ForeignKey(Modulo, on_delete=models.CASCADE, verbose_name='Módulo', related_name='servicos')
     descricao = models.TextField('Descrição', blank=True)
@@ -49,7 +49,7 @@ class Servico(models.Model):
 
 class Profissional(models.Model):
     """Perfil de profissional vinculado a usuário"""
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='profissionais', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='profissionais', verbose_name='Salão')
     usuario = models.OneToOneField(
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
@@ -107,7 +107,7 @@ class Agendamento(models.Model):
         ('cancelado', 'Cancelado'),
     )
     
-    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='agendamentos', verbose_name='Salão', null=True)
+    salao = models.ForeignKey(Salao, on_delete=models.CASCADE, related_name='agendamentos', verbose_name='Salão')
     cliente = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

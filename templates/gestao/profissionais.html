@@ -1,69 +1,326 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="pt-br">
 
-{% block title %}Gestão de Profissionais - AppSalão{% endblock %}
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gestão de Profissionais - Beauty SaaS</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#D9AAB7",
+                        "background-light": "#F8F9FA",
+                        "background-dark": "#1C1C1E",
+                        "text-light": "#343A40",
+                        "text-dark": "#EAEAEB",
+                        "text-secondary-light": "#6C757D",
+                        "text-secondary-dark": "#A0A0A5",
+                        "border-light": "#DEE2E6",
+                        "border-dark": "#38383A",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#2C2C2E",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
 
-{% block content %}
-<div class="container">
-    <h2 class="mb-4">
-        <i class="bi bi-people"></i> Gestão de Profissionais
-    </h2>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden"
+        x-data="{ showModal: false }">
+        <div class="layout-container flex h-full grow flex-col">
+            <div class="flex flex-1 justify-center">
+                <div class="layout-content-container flex flex-col w-full">
+                    <!-- Navigation Bar (similar to dashboard) -->
+                    <nav
+                        class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-6 py-3 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10">
+                        <div class="flex items-center gap-6">
+                            <a href="{% url 'home' %}" class="flex items-center gap-2">
+                                <div class="size-6 text-primary">
+                                    <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_6_330)">
+                                            <path clip-rule="evenodd"
+                                                d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                                                fill="currentColor" fill-rule="evenodd"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <h2 class="text-text-light dark:text-text-dark text-lg font-bold tracking-[-0.015em]">
+                                    Beauty SaaS</h2>
+                            </a>
+                            <a href="{% url 'admin_dashboard' %}"
+                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                <span class="material-symbols-outlined text-lg">dashboard</span>
+                                <span class="text-sm font-medium">Dashboard</span>
+                            </a>
+                        </div>
+                        <div class="flex items-center gap-4">
+                             <!-- User Dropdown (copy from dashboard) -->
+                             <div x-data="{ open: false }" class="relative">
+                                <button @click="open = !open" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                    {% if user.foto %}
+                                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" style="background-image: url('{{ user.foto.url }}');"></div>
+                                    {% else %}
+                                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 bg-primary flex items-center justify-center text-white text-xs font-bold">
+                                        {{ user.first_name.0|default:user.username.0|upper }}
+                                    </div>
+                                    {% endif %}
+                                    <span class="text-sm font-medium">
+                                        {{ user.get_full_name|default:user.username }}
+                                    </span>
+                                    <span class="material-symbols-outlined text-base transition-transform" :class="open ? 'rotate-180' : ''">expand_more</span>
+                                </button>
+                                <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-56 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg py-2 z-50">
+                                    <a href="{% url 'perfil' %}" class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Meu Perfil</a>
+                                    <a href="{% url 'meus_agendamentos' %}" class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Meus Agendamentos</a>
+                                     <div class="border-t border-border-light dark:border-border-dark my-2"></div>
+                                    <a href="{% url 'admin_dashboard' %}" class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Dashboard Admin</a>
+                                    <div class="border-t border-border-light dark:border-border-dark my-2"></div>
+                                    <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">Sair</a>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    <main class="flex flex-1 p-6 gap-6">
+                        <aside class="w-80 hidden lg:block">
+                            <div
+                                class="bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg p-4">
+                                <h3 class="text-lg font-bold mb-4">Admin</h3>
+                                <div class="flex flex-col gap-3">
+                                    <a href="{% url 'admin_dashboard' %}"
+                                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl text-primary">dashboard</span>
+                                        <span class="font-medium">Dashboard</span>
+                                    </a>
+                                    <a href="{% url 'gestao_profissionais' %}"
+                                        class="flex items-center gap-3 p-3 rounded-lg bg-zinc-100 dark:bg-zinc-700 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl text-primary">group</span>
+                                        <span class="font-medium">Profissionais</span>
+                                    </a>
+                                    <a href="{% url 'gestao_servicos' %}"
+                                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl text-primary">content_cut</span>
+                                        <span class="font-medium">Serviços</span>
+                                    </a>
+                                    <a href="{% url 'gestao_estoque' %}"
+                                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl text-primary">inventory_2</span>
+                                        <span class="font-medium">Estoque</span>
+                                    </a>
+                                    <a href="{% url 'gestao_financeiro' %}"
+                                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                                        <span class="material-symbols-outlined text-2xl text-primary">payments</span>
+                                        <span class="font-medium">Financeiro</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </aside>
+                        <div class="flex-1 flex flex-col gap-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col gap-2">
+                                    <p class="text-3xl font-bold tracking-tight">Gestão de Profissionais</p>
+                                    <p class="text-text-secondary-light dark:text-text-secondary-dark">Adicione, edite e
+                                        gerencie seus profissionais.</p>
+                                </div>
+                                <button @click="showModal = true"
+                                    class="flex items-center gap-2 bg-primary text-white font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Novo Profissional
+                                </button>
+                            </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Profissionais Cadastrados</h5>
-                </div>
-                <div class="card-body">
-                    {% if profissionais %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Módulos</th>
-                                    <th>Horário</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <!-- Professional List -->
+                            <div class="flex flex-col gap-4">
+                                {% if profissionais %}
                                 {% for prof in profissionais %}
-                                <tr>
-                                    <td><strong>{{ prof.usuario.get_full_name }}</strong></td>
-                                    <td>
-                                        {% for mod in prof.modulos.all %}
-                                        <span class="badge bg-info">{{ mod }}</span>
-                                        {% endfor %}
-                                    </td>
-                                    <td>{{ prof.horario_inicio }} - {{ prof.horario_fim }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ prof.ativo|yesno:'success,secondary' }}">
-                                            {{ prof.ativo|yesno:'Ativo,Inativo' }}
-                                        </span>
-                                    </td>
-                                </tr>
+                                <div
+                                    class="flex items-center gap-4 p-4 rounded-lg bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark hover:shadow-md transition-shadow">
+                                    <div
+                                        class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12 bg-primary flex items-center justify-center text-white text-lg font-bold">
+                                        {{ prof.usuario.first_name.0|default:prof.usuario.username.0|upper }}
+                                    </div>
+                                    <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                                        <div>
+                                            <p class="font-semibold text-text-light dark:text-text-dark">{{
+                                                prof.usuario.get_full_name }}</p>
+                                            <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
+                                                {{ prof.usuario.email }}</p>
+                                        </div>
+                                        <div>
+                                            <p
+                                                class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
+                                                Horário</p>
+                                            <p class="font-medium">{{ prof.horario_inicio|date:"H:i" }} - {{
+                                                prof.horario_fim|date:"H:i" }}</p>
+                                        </div>
+                                        <div>
+                                            <span
+                                                class="inline-block px-2 py-1 text-xs rounded-full {% if prof.ativo %}bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300{% else %}bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300{% endif %}">
+                                                {{ prof.ativo|yesno:'Ativo,Inativo' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <!-- Action buttons can be added here -->
+                                </div>
                                 {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <p class="text-muted text-center py-4">Nenhum profissional cadastrado.</p>
-                    {% endif %}
+                                {% else %}
+                                <div
+                                    class="flex flex-col items-center justify-center p-12 rounded-lg bg-card-light dark:bg-card-dark border border-dashed border-border-light dark:border-border-dark">
+                                    <span
+                                        class="material-symbols-outlined text-6xl text-text-secondary-light dark:text-text-secondary-dark">group_off</span>
+                                    <p class="mt-4 text-lg text-text-secondary-light dark:text-text-secondary-dark">
+                                        Nenhum profissional cadastrado</p>
+                                    <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Clique
+                                        em "Novo Profissional" para começar.</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </main>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Novo Profissional</h5>
+        <!-- Modal for New Professional -->
+        <div x-show="showModal"
+            class="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;">
+            <div @click.away="showModal = false"
+                class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg w-full max-w-2xl p-6 m-4"
+                x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <div class="flex items-center justify-between border-b border-border-light dark:border-border-dark pb-4">
+                    <h3 class="text-xl font-semibold">Novo Profissional</h3>
+                    <button @click="showModal = false"
+                        class="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
                 </div>
-                <div class="card-body">
-                    {% crispy form %}
-                </div>
+                <form method="post" class="mt-6 space-y-6">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium mb-1">Nome</label>
+                            <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" value="{{ form.first_name.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium mb-1">Sobrenome</label>
+                            <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" value="{{ form.last_name.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium mb-1">Nome de Usuário</label>
+                            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" value="{{ form.username.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium mb-1">Email</label>
+                            <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" value="{{ form.email.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium mb-1">Senha</label>
+                            <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="{{ form.especialidades.id_for_label }}" class="block text-sm font-medium mb-1">Especialidades (separadas por vírgula)</label>
+                            <input type="text" name="{{ form.especialidades.name }}" id="{{ form.especialidades.id_for_label }}" value="{{ form.especialidades.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                         <div class="md:col-span-2">
+                            <label for="{{ form.biografia.id_for_label }}" class="block text-sm font-medium mb-1">Biografia</label>
+                            <textarea name="{{ form.biografia.name }}" id="{{ form.biografia.id_for_label }}" rows="3" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">{{ form.biografia.value|default:'' }}</textarea>
+                        </div>
+                        <div>
+                            <label for="{{ form.horario_inicio.id_for_label }}" class="block text-sm font-medium mb-1">Horário de Início</label>
+                            <input type="time" name="{{ form.horario_inicio.name }}" id="{{ form.horario_inicio.id_for_label }}" value="{{ form.horario_inicio.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="{{ form.horario_fim.id_for_label }}" class="block text-sm font-medium mb-1">Horário de Fim</label>
+                            <input type="time" name="{{ form.horario_fim.name }}" id="{{ form.horario_fim.id_for_label }}" value="{{ form.horario_fim.value|default:'' }}" class="w-full rounded-md border-border-light dark:border-border-dark bg-transparent focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="md:col-span-2">
+                             <label class="block text-sm font-medium mb-2">Dias de Trabalho</label>
+                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_domingo" id="{{ form.trabalha_domingo.id_for_label }}" {% if form.trabalha_domingo.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_domingo.id_for_label }}" class="text-sm">Domingo</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_segunda" id="{{ form.trabalha_segunda.id_for_label }}" {% if form.trabalha_segunda.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_segunda.id_for_label }}" class="text-sm">Segunda</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_terca" id="{{ form.trabalha_terca.id_for_label }}" {% if form.trabalha_terca.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_terca.id_for_label }}" class="text-sm">Terça</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_quarta" id="{{ form.trabalha_quarta.id_for_label }}" {% if form.trabalha_quarta.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_quarta.id_for_label }}" class="text-sm">Quarta</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_quinta" id="{{ form.trabalha_quinta.id_for_label }}" {% if form.trabalha_quinta.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_quinta.id_for_label }}" class="text-sm">Quinta</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_sexta" id="{{ form.trabalha_sexta.id_for_label }}" {% if form.trabalha_sexta.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_sexta.id_for_label }}" class="text-sm">Sexta</label>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" name="trabalha_sabado" id="{{ form.trabalha_sabado.id_for_label }}" {% if form.trabalha_sabado.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                    <label for="{{ form.trabalha_sabado.id_for_label }}" class="text-sm">Sábado</label>
+                                </div>
+                             </div>
+                        </div>
+                         <div class="md:col-span-2">
+                             <label for="{{ form.modulos.id_for_label }}" class="block text-sm font-medium mb-2">Módulos</label>
+                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {% for choice in form.modulos.field.choices %}
+                                    <div class="flex items-center gap-2">
+                                        <input type="checkbox" name="{{ form.modulos.name }}" value="{{ choice.0 }}" id="id_{{ form.modulos.name }}_{{ forloop.counter }}" class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                                        <label for="id_{{ form.modulos.name }}_{{ forloop.counter }}" class="text-sm">{{ choice.1 }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 flex items-center gap-2">
+                            <input type="checkbox" name="{{ form.ativo.name }}" id="{{ form.ativo.id_for_label }}" {% if form.ativo.value %}checked{% endif %} class="rounded border-gray-300 text-primary shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                            <label for="{{ form.ativo.id_for_label }}" class="text-sm font-medium">Profissional Ativo</label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4 pt-6 border-t border-border-light dark:border-border-dark">
+                        <button type="button" @click="showModal = false"
+                            class="px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 transition-colors">Cancelar</button>
+                        <button type="submit"
+                            class="px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-opacity">Salvar
+                            Profissional</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+</body>
+
+</html>
